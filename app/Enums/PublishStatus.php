@@ -14,7 +14,7 @@ enum PublishStatus: string
     {
         return match ($this) {
             self::Draft => '下書き',
-            self::Published => '公開',
+            self::Published => '公開済み',
         };
     }
 }
