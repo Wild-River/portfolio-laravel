@@ -67,6 +67,18 @@ class CategoryTest extends TestCase
         $this->assertDatabaseCount('categories', 1);
     }
 
+    public function test_validation_messages_are_in_japanese(): void
+    {
+        Category::factory()->create(['slug' => 'php']);
+
+        $this->actingAs(User::factory()->create())
+            ->post('/admin/categories', ['name' => '', 'slug' => 'php'])
+            ->assertSessionHasErrors([
+                'name' => 'カテゴリ名を入力してください。',
+                'slug' => 'このスラッグは既に使われています。',
+            ]);
+    }
+
     public function test_edit_screen_is_found_by_slug(): void
     {
         $category = Category::factory()->create(['slug' => 'php']);
