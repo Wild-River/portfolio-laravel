@@ -15,6 +15,12 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('admin.categories.index')" :active="request()->routeIs('admin.categories.*')">
+                        カテゴリ
+                    </x-nav-link>
+                    <x-nav-link :href="route('admin.tags.index')" :active="request()->routeIs('admin.tags.*')">
+                        タグ
+                    </x-nav-link>
                 </div>
             </div>
 
@@ -69,6 +75,12 @@
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('admin.categories.index')" :active="request()->routeIs('admin.categories.*')">
+                カテゴリ
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('admin.tags.index')" :active="request()->routeIs('admin.tags.*')">
+                タグ
             </x-responsive-nav-link>
         </div>
 
