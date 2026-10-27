@@ -23,7 +23,7 @@
             <img class="article-hero" src="{{ $post->thumbnail_url }}" alt="{{ $post->title }}">
         @endif
 
-        <div class="article-body">{{ $post->body }}</div>
+        <div class="article-body">{{ App\Support\AutoLink::html($post->body) }}</div>
 
         @if ($post->tags->isNotEmpty())
             <div class="article-tags">

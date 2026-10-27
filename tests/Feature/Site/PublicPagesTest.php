@@ -97,6 +97,20 @@ class PublicPagesTest extends TestCase
             ->assertDontSee('2026.07.20');
     }
 
+    public function test_urls_in_post_body_and_work_description_are_linked(): void
+    {
+        Post::factory()->published()->create(['slug' => 'first-post', 'body' => '詳しくは https://example.com/post を見てください。']);
+        Work::factory()->published()->create(['slug' => 'portfolio', 'description' => '使ったもの：https://tailadmin.com/']);
+
+        $this->get('/posts/first-post')
+            ->assertOk()
+            ->assertSee('<a href="https://example.com/post" target="_blank" rel="noopener noreferrer">', false);
+
+        $this->get('/works/portfolio')
+            ->assertOk()
+            ->assertSee('<a href="https://tailadmin.com/" target="_blank" rel="noopener noreferrer">', false);
+    }
+
     public function test_draft_or_missing_post_is_not_found(): void
     {
         Post::factory()->create(['slug' => 'draft-post']);

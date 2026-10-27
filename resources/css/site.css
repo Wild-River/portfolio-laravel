@@ -815,6 +815,11 @@ body:has(.site-footer) h2.blog-card__title {
   margin-bottom: 32px;
 }
 
+/* 本文中の URL（AutoLink でリンク化）：長い URL でも画面からはみ出さないよう折り返す */
+.article-body a {
+  overflow-wrap: anywhere;
+}
+
 .article-gallery {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));

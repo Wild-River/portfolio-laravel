@@ -23,7 +23,7 @@
             <img class="article-hero" src="{{ $work->thumbnail_url }}" alt="{{ $work->title }}">
         @endif
 
-        <div class="article-body">{{ $work->description }}</div>
+        <div class="article-body">{{ App\Support\AutoLink::html($work->description) }}</div>
 
         @if ($work->images->isNotEmpty())
             <div class="article-gallery">
