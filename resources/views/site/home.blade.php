@@ -44,4 +44,30 @@
     <div class="section-more">
         <a class="btn-primary" href="{{ route('works.index') }}">制作アプリ一覧を見る</a>
     </div>
+
+    <div class="github-langs-section">
+        <h2>GitHubリポジトリでの使用言語</h2>
+        @if ($languages->isNotEmpty())
+            @php
+                $colors = ['#67b5b0', '#549691', '#8a9a95', '#c9c2a8', '#b4d9d6', '#3d5c58', '#d9d4c2'];
+            @endphp
+            <div class="github-langs">
+                <div class="github-langs__bar">
+                    @foreach ($languages as $language)
+                        <span class="github-langs__segment" style="width: {{ $language['percent'] }}%; background: {{ $colors[$loop->index % count($colors)] }};"></span>
+                    @endforeach
+                </div>
+
+                <ul class="github-langs__list">
+                    @foreach ($languages as $language)
+                        <li class="github-langs__item">
+                            <span class="github-langs__swatch" style="background: {{ $colors[$loop->index % count($colors)] }};"></span>
+                            <span class="github-langs__name">{{ $language['language'] }}</span>
+                            <span class="github-langs__percent">{{ round($language['percent'], 1) }}%</span>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+    </div>
 </x-site-layout>

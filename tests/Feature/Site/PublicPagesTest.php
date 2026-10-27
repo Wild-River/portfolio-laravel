@@ -3,15 +3,24 @@
 namespace Tests\Feature\Site;
 
 use App\Models\Category;
+use App\Models\GitHubLanguageStat;
 use App\Models\Post;
 use App\Models\Tag;
 use App\Models\Work;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
 class PublicPagesTest extends TestCase
 {
     use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        Http::fake(['api.github.com/users/*' => Http::response([])]);
+    }
 
     public function test_home_shows_latest_three_published_posts(): void
     {
@@ -40,6 +49,16 @@ class PublicPagesTest extends TestCase
             ->assertOk()
             ->assertDontSee($old->title)
             ->assertDontSee($draft->title);
+    }
+
+    public function test_home_shows_github_language_share(): void
+    {
+        GitHubLanguageStat::create(['language' => 'PHP', 'bytes' => 750, 'fetched_at' => now()]);
+        GitHubLanguageStat::create(['language' => 'Blade', 'bytes' => 250, 'fetched_at' => now()]);
+
+        $this->get('/')
+            ->assertOk()
+            ->assertSeeInOrder(['GitHubリポジトリでの使用言語', 'PHP', '75%', 'Blade', '25%']);
     }
 
     public function test_posts_index_lists_only_published_posts_with_tags(): void
