@@ -132,6 +132,16 @@ class PostTest extends TestCase
             ->assertSessionHasErrors(['status', 'category_id', 'tags.0']);
     }
 
+    public function test_tag_errors_are_shown_on_the_form(): void
+    {
+        $this->actingAs(User::factory()->create())
+            ->from('/admin/posts/create')
+            ->followingRedirects()
+            ->post('/admin/posts', $this->validInput(['tags' => [999]]))
+            ->assertOk()
+            ->assertSee('選択されたタグは正しくありません。');
+    }
+
     public function test_slug_must_be_unique(): void
     {
         Post::factory()->create(['slug' => 'first-post']);

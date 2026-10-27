@@ -51,7 +51,7 @@
             <p class="text-sm text-gray-500">タグはまだありません。</p>
         @endforelse
     </div>
-    <x-input-error class="mt-2" :messages="[...$errors->get('tags'), ...$errors->get('tags.*')]" />
+    <x-input-error class="mt-2" :messages="Arr::flatten([$errors->get('tags'), $errors->get('tags.*')])" />
 </fieldset>
 
 <div>
