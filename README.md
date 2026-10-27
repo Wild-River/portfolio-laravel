@@ -2,26 +2,27 @@
 
 ブログ記事（posts）と制作アプリ（works）を管理画面から投稿・編集し、公開ページに表示するポートフォリオサイトです。
 
-もともとはフレームワークを使わず、素の PHP（PDO）と MySQL で作っていました。そのときの機能とデータベース設計をそのまま引き継いで、Laravel に作り直したのがこのリポジトリです。
+最初はフレームワークを使わず、素の PHP（PDO）と MySQL で作りました（[素の PHP 版のリポジトリ](https://github.com/Wild-River/kadai09_auth)）。このリポジトリは、その機能とデータベース設計を引き継いで、Laravel で作り直したものです。
 
 ---
 
 ## 主な機能
 
-### 管理画面（`/admin`）
-
-- ログイン・ログアウト（管理者は1人だけ。ユーザー登録やパスワードリセットは置いていません）
-- ブログ記事・制作アプリの登録・編集・削除
-- カテゴリ・タグの登録・編集・削除と、記事・アプリへの付与（タグは複数選べます）
-- サムネイル画像のアップロード・差し替え・削除
-- 制作アプリへのギャラリー画像の追加（まとめて複数枚）と、選んだ画像の削除
-- 「下書き」と「公開済み」の切り替え
+サイトは、訪問者が見る公開ページと、その内容を更新する管理画面に分かれています。
 
 ### 公開ページ
 
 - トップページ：新着記事3件、制作アプリ6件、GitHub の使用言語の比率
 - ブログ記事・制作アプリの一覧と詳細（公開済みのものだけ表示）
 - 制作アプリのギャラリー画像は、クリックで拡大表示（ライトボックス）
+
+### 管理画面（`/admin`）
+
+- ログイン・ログアウト（管理者は1人だけ。ユーザー登録やパスワードリセットは置いていません）
+- ブログ記事・制作アプリの登録・編集・削除と、「下書き」「公開済み」の切り替え
+- カテゴリ・タグの登録・編集・削除と、記事・アプリへの付与（タグは複数選べます）
+- サムネイル画像のアップロード・差し替え・削除
+- 制作アプリへのギャラリー画像の追加（まとめて複数枚）と、選んだ画像の削除
 
 ---
 
@@ -35,13 +36,12 @@
 | データベース | MySQL 8.4 |
 | 外部 API | GitHub REST API |
 | 開発環境 | Docker（Laravel Sail） |
-| テスト | PHPUnit（Feature テスト 89件） |
 
 ---
 
 ## 素の PHP 版から変えたところ
 
-同じ機能を、Laravel の仕組みに置き換えています。
+機能は素の PHP 版と同じまま、実装を Laravel の仕組みに置き換えました。
 
 | 機能 | 素の PHP 版 | Laravel 版 |
 |---|---|---|
@@ -49,16 +49,21 @@
 | 入力チェック | 各ページに手書き | FormRequest（エラーメッセージは日本語） |
 | 認証 | セッションを自前で管理 | Breeze と `auth` ミドルウェア |
 | CSRF 対策 | なし | すべてのフォームに `@csrf` |
-| 公開状態 | `WHERE status = 'published'` | `PublishStatus` Enum と `published()` スコープ |
 | URL | `single.php?id=1` | `/posts/{slug}`（slug によるルートモデルバインディング） |
+| 公開状態 | `WHERE status = 'published'` | `PublishStatus` Enum と `published()` スコープ |
 | 画像の保存 | `move_uploaded_file` | `Storage::disk('public')` |
 | 画像のチェック | 拡張子とサイズだけ | `image` / `mimes` / `max` ルール（中身の形式も確認） |
 | GitHub 連携 | cURL の関数 | `GitHubLanguageService`（Http クライアント、並列で取得） |
-| テスト | なし | Feature テスト |
 
 ---
 
 ## 工夫した点
+
+置き換えにあわせて、次の3点に気を配りました。
+
+### 下書きを見せない
+
+公開ページでは `published()` スコープで、公開済みのものだけを取得します。下書きの記事は、URL を直接入力しても 404 になります。
 
 ### 画像ファイルの後始末
 
@@ -72,21 +77,13 @@
 - リポジトリの数だけ API を呼ぶため、結果を `github_language_stats` テーブルに保存し、24時間はキャッシュから表示します。
 - 取得に失敗したときは、古いキャッシュを表示して画面が壊れないようにしています。一部のリポジトリだけ失敗した場合も、中途半端な合計でキャッシュを上書きしません。
 
-### 下書きを見せない
-
-公開ページでは `published()` スコープで公開済みだけを取得します。下書きの記事は、URL を直接入力しても 404 になります。
-
-### 外部 API を呼ばないテスト
-
-テストでは `Http::preventStrayRequests()` で外部への通信を禁止し、GitHub の応答は `Http::fake()` で用意しています。画像は `Storage::fake()` を使い、保存と削除の両方を確認しています。
-
 ---
 
 ## DB 設計
 
-![ER図](docs/db.drawio.svg)
+テーブル設計は素の PHP 版から引き継ぎ、管理者のテーブルだけを Laravel 標準の `users` に置き換えました。
 
-図は [draw.io](https://www.drawio.com/) の形式で、VS Code の拡張機能「Draw.io Integration」でそのまま開いて編集できます。
+![ER図](docs/db.drawio.svg)
 
 | テーブル | 内容 |
 |---|---|
@@ -102,56 +99,14 @@
 
 ---
 
-## ローカル環境の構築
-
-Docker（Docker Desktop など）が必要です。
-
-```sh
-git clone https://github.com/Wild-River/portfolio-laravel.git
-cd portfolio-laravel
-
-# 依存パッケージのインストール（ホストに PHP 8.3 以上と Composer がある場合）
-composer install
-
-cp .env.example .env
-```
-
-`.env` に次の値を設定します。
-
-| キー | 内容 |
-|---|---|
-| `ADMIN_EMAIL` / `ADMIN_PASSWORD` | 管理者のログイン情報（必須）。`ADMIN_NAME` は任意 |
-| `GITHUB_TOKEN` | GitHub のトークン（任意）。権限は Metadata の読み取りだけで足ります。なくても動きますが、API を呼べる回数が1時間60回になります |
-| `GITHUB_USERNAME` | 言語比率を集計する GitHub ユーザー（省略すると Wild-River） |
-
-```sh
-./vendor/bin/sail up -d
-./vendor/bin/sail artisan key:generate
-./vendor/bin/sail artisan migrate --seed   # テーブル作成と管理者の登録
-./vendor/bin/sail artisan storage:link     # アップロード画像を公開する
-./vendor/bin/sail npm install
-./vendor/bin/sail npm run build
-```
-
-- 公開ページ：http://localhost/
-- 管理画面：http://localhost/login（`.env` に設定した管理者でログイン）
-
-### テストの実行
-
-```sh
-./vendor/bin/sail artisan test
-```
-
----
-
 ## ディレクトリ構成（主なもの）
 
 ```
 app/
 ├── Enums/PublishStatus.php        # 下書き・公開済み
 ├── Http/
-│   ├── Controllers/Admin/         # 管理画面（posts / works / categories / tags）
 │   ├── Controllers/Site/          # 公開ページ（トップ / posts / works）
+│   ├── Controllers/Admin/         # 管理画面（posts / works / categories / tags）
 │   └── Requests/Admin/            # 入力チェック（FormRequest）
 ├── Models/                        # Post, Work, WorkImage, Category, Tag, GitHubLanguageStat
 └── Services/GitHubLanguageService.php
@@ -161,7 +116,6 @@ lang/ja/                           # 日本語のエラーメッセージ
 resources/
 ├── css/site.css, js/site.js       # 公開ページの CSS・JS（素の PHP 版から移植）
 └── views/
-    ├── admin/                     # 管理画面
-    └── site/                      # 公開ページ
-tests/Feature/                     # Feature テスト
+    ├── site/                      # 公開ページ
+    └── admin/                     # 管理画面
 ```
