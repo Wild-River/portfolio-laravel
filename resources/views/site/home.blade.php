@@ -4,7 +4,7 @@
             @include('site.partials.nav')
 
             <h1 class="hero__title">Rumi Arakawa</h1>
-            <p class="hero__subtitle">2026.5月〜 G'sでの学習ログと制作アプリ</p>
+            <p class="hero__subtitle">2026.5月〜 プログラミングの学習ログと制作アプリ</p>
         </section>
     </x-slot>
 
