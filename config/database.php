@@ -64,6 +64,21 @@ return [
             ]) : [],
         ],
 
+        // The plain PHP version's database (kadai09_auth), read by app:import-legacy.
+        // Sail reaches MAMP's MySQL on the host through host.docker.internal.
+        'legacy' => [
+            'driver' => 'mysql',
+            'host' => env('LEGACY_DB_HOST', 'host.docker.internal'),
+            'port' => env('LEGACY_DB_PORT', '8889'),
+            'database' => env('LEGACY_DB_DATABASE'),
+            'username' => env('LEGACY_DB_USERNAME'),
+            'password' => env('LEGACY_DB_PASSWORD', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => true,
+        ],
+
         'mariadb' => [
             'driver' => 'mariadb',
             'url' => env('DB_URL'),
