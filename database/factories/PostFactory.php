@@ -25,7 +25,7 @@ class PostFactory extends Factory
             'category_id' => Category::factory(),
             'title' => fake()->sentence(4),
             'body' => fake()->paragraphs(3, true),
-            'slug' => fake()->unique()->slug(2),
+            'slug' => fake()->unique()->regexify('[a-z]{8}-[0-9]{4}'),
             'status' => PublishStatus::Draft,
         ];
     }

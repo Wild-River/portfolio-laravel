@@ -19,7 +19,7 @@ class CategoryFactory extends Factory
     {
         return [
             'name' => fake()->unique()->word(),
-            'slug' => fake()->unique()->slug(2),
+            'slug' => fake()->unique()->regexify('[a-z]{8}-[0-9]{4}'),
         ];
     }
 }

@@ -5,11 +5,14 @@ use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\Admin\WorkController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Site;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', Site\HomeController::class)->name('home');
+Route::get('/posts', [Site\PostController::class, 'index'])->name('posts.index');
+Route::get('/posts/{post}', [Site\PostController::class, 'show'])->name('posts.show');
+Route::get('/works', [Site\WorkController::class, 'index'])->name('works.index');
+Route::get('/works/{work}', [Site\WorkController::class, 'show'])->name('works.show');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
