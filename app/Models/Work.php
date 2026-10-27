@@ -8,11 +8,13 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\RouteKey;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Storage;
 
 #[Fillable(['category_id', 'title', 'description', 'thumbnail_path', 'slug', 'status'])]
 #[RouteKey('slug')]
@@ -40,6 +42,18 @@ class Work extends Model
     protected function published(Builder $query): void
     {
         $query->where('status', PublishStatus::Published);
+    }
+
+    /**
+     * Get the public URL of the thumbnail.
+     *
+     * @return Attribute<string|null, never>
+     */
+    protected function thumbnailUrl(): Attribute
+    {
+        return Attribute::get(
+            fn () => $this->thumbnail_path ? Storage::disk('public')->url($this->thumbnail_path) : null,
+        );
     }
 
     /**
