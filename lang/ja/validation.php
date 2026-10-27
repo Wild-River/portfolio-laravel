@@ -174,8 +174,8 @@ return [
     */
 
     'custom' => [
-        'attribute-name' => [
-            'rule-name' => 'custom-message',
+        'slug' => [
+            'regex' => ':attributeは英小文字・数字・ハイフンで入力してください（例：my-first-post）。',
         ],
     ],
 

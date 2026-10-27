@@ -79,6 +79,23 @@ class CategoryTest extends TestCase
             ]);
     }
 
+    public function test_slug_must_be_lowercase_words_joined_by_hyphens(): void
+    {
+        $user = User::factory()->create();
+
+        foreach (['kadai01_janken', 'React', 'web-', '-web', 'web--site'] as $slug) {
+            $this->actingAs($user)
+                ->post('/admin/categories', ['name' => 'PHP', 'slug' => $slug])
+                ->assertSessionHasErrors(['slug' => 'スラッグは英小文字・数字・ハイフンで入力してください（例：my-first-post）。']);
+        }
+
+        $this->actingAs($user)
+            ->post('/admin/categories', ['name' => 'PHP', 'slug' => 'engineer-lab-2'])
+            ->assertSessionHasNoErrors();
+
+        $this->assertDatabaseCount('categories', 1);
+    }
+
     public function test_edit_screen_is_found_by_slug(): void
     {
         $category = Category::factory()->create(['slug' => 'php']);

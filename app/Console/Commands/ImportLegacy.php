@@ -187,8 +187,8 @@ class ImportLegacy extends Command
      */
     private function checkSlug(string $table, object $row): void
     {
-        if (! preg_match('/^[A-Za-z0-9_-]+$/', $row->slug)) {
-            $this->issues[] = "{$table} #{$row->id} の slug「{$row->slug}」は英数字・ハイフン・アンダースコア以外を含みます（編集時に直してください）";
+        if (! preg_match('/^[a-z0-9]+(?:-[a-z0-9]+)*$/', $row->slug)) {
+            $this->issues[] = "{$table} #{$row->id} の slug「{$row->slug}」は英小文字・数字・ハイフンの形式ではありません（編集時に直してください）";
         }
     }
 

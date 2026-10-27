@@ -57,7 +57,7 @@
 <div>
     <x-input-label for="slug" value="スラッグ" />
     <x-text-input id="slug" name="slug" type="text" class="mt-1 block w-full sm:w-64" :value="old('slug', $post?->slug)" required />
-    <p class="mt-1 text-sm text-gray-500">URL に使います。半角英数字・ハイフン・アンダースコアで入力してください。</p>
+    <p class="mt-1 text-sm text-gray-500">URL に使います。英小文字・数字・ハイフンで入力してください（例：my-first-post）。</p>
     <x-input-error class="mt-2" :messages="$errors->get('slug')" />
 </div>
 

@@ -22,7 +22,7 @@ class CategoryRequest extends FormRequest
                 'required',
                 'string',
                 'max:30',
-                'alpha_dash:ascii',
+                'regex:/^[a-z0-9]+(?:-[a-z0-9]+)*$/',
                 Rule::unique(Category::class)->ignore($this->route('category')),
             ],
         ];

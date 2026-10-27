@@ -33,7 +33,7 @@ class WorkRequest extends FormRequest
                 'required',
                 'string',
                 'max:30',
-                'alpha_dash:ascii',
+                'regex:/^[a-z0-9]+(?:-[a-z0-9]+)*$/',
                 Rule::unique(Work::class)->ignore($this->route('work')),
             ],
             'status' => ['required', Rule::enum(PublishStatus::class)],

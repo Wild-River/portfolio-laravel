@@ -29,7 +29,7 @@ class PostRequest extends FormRequest
                 'required',
                 'string',
                 'max:30',
-                'alpha_dash:ascii',
+                'regex:/^[a-z0-9]+(?:-[a-z0-9]+)*$/',
                 Rule::unique(Post::class)->ignore($this->route('post')),
             ],
             'status' => ['required', Rule::enum(PublishStatus::class)],

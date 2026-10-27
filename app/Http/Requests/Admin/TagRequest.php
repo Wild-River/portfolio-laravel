@@ -22,7 +22,7 @@ class TagRequest extends FormRequest
                 'required',
                 'string',
                 'max:100',
-                'alpha_dash:ascii',
+                'regex:/^[a-z0-9]+(?:-[a-z0-9]+)*$/',
                 Rule::unique(Tag::class)->ignore($this->route('tag')),
             ],
         ];
