@@ -13,7 +13,7 @@
         <div class="post-list">
             @foreach ($posts as $post)
                 <a class="post-list-item" href="{{ route('posts.show', $post) }}">
-                    <span class="post-list-item__date">{{ $post->created_at->format('Y.m.d') }}</span>
+                    <span class="post-list-item__date">{{ $post->published_at->format('Y.m.d') }}</span>
                     @if ($post->category)
                         <span class="post-list-item__badge">{{ $post->category->name }}</span>
                     @endif

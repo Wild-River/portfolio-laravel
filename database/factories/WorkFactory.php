@@ -27,6 +27,7 @@ class WorkFactory extends Factory
             'description' => fake()->paragraphs(3, true),
             'slug' => fake()->unique()->regexify('[a-z]{8}-[0-9]{4}'),
             'status' => PublishStatus::Draft,
+            'published_at' => fake()->dateTimeBetween('-1 year')->format('Y-m-d'),
         ];
     }
 

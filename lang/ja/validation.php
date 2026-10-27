@@ -200,6 +200,7 @@ return [
         'description' => '説明',
         'slug' => 'スラッグ',
         'status' => '公開状態',
+        'published_at' => '公開日',
         'category_id' => 'カテゴリ',
         'tags' => 'タグ',
         'thumbnail' => 'サムネイル画像',

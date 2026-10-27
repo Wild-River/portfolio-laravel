@@ -24,6 +24,7 @@
                             <th class="px-6 py-3">本文</th>
                             <th class="px-6 py-3">スラッグ</th>
                             <th class="px-6 py-3">ステータス</th>
+                            <th class="px-6 py-3">公開日</th>
                             <th class="px-6 py-3">カテゴリ</th>
                             <th class="px-6 py-3"></th>
                         </tr>
@@ -41,6 +42,7 @@
                                 <td class="px-6 py-3 text-gray-600">{{ Str::limit($post->body, 20) }}</td>
                                 <td class="px-6 py-3">{{ $post->slug }}</td>
                                 <td class="px-6 py-3">{{ $post->status->label() }}</td>
+                                <td class="px-6 py-3 whitespace-nowrap">{{ $post->published_at->format('Y.m.d') }}</td>
                                 <td class="px-6 py-3">{{ $post->category?->name }}</td>
                                 <td class="px-6 py-3 text-right">
                                     <a href="{{ route('admin.posts.edit', $post) }}" class="text-indigo-600 hover:underline">編集</a>
@@ -48,7 +50,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="8" class="px-6 py-6 text-center text-gray-500">記事はまだありません。</td>
+                                <td colspan="9" class="px-6 py-6 text-center text-gray-500">記事はまだありません。</td>
                             </tr>
                         @endforelse
                     </tbody>

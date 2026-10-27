@@ -24,6 +24,7 @@
                             <th class="px-6 py-3">説明文</th>
                             <th class="px-6 py-3">スラッグ</th>
                             <th class="px-6 py-3">ステータス</th>
+                            <th class="px-6 py-3">公開日</th>
                             <th class="px-6 py-3">カテゴリ</th>
                             <th class="px-6 py-3">ギャラリー</th>
                             <th class="px-6 py-3"></th>
@@ -42,6 +43,7 @@
                                 <td class="px-6 py-3 text-gray-600">{{ Str::limit($work->description, 20) }}</td>
                                 <td class="px-6 py-3">{{ $work->slug }}</td>
                                 <td class="px-6 py-3">{{ $work->status->label() }}</td>
+                                <td class="px-6 py-3 whitespace-nowrap">{{ $work->published_at->format('Y.m.d') }}</td>
                                 <td class="px-6 py-3">{{ $work->category?->name }}</td>
                                 <td class="px-6 py-3">{{ $work->images_count }}枚</td>
                                 <td class="px-6 py-3 text-right">
@@ -50,7 +52,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="9" class="px-6 py-6 text-center text-gray-500">制作アプリはまだありません。</td>
+                                <td colspan="10" class="px-6 py-6 text-center text-gray-500">制作アプリはまだありません。</td>
                             </tr>
                         @endforelse
                     </tdescription>

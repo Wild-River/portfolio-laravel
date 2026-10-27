@@ -24,7 +24,7 @@
                     @endif
                     <span class="blog-card__meta">
                         <i class="fa-regular fa-clock"></i>
-                        {{ $post->created_at->format('Y.m.d') }}
+                        {{ $post->published_at->format('Y.m.d') }}
                     </span>
                 </div>
             </a>

@@ -124,6 +124,7 @@ class ImportLegacyTest extends TestCase
         $this->assertSame(['laravel', 'php'], $post->tags->pluck('slug')->sort()->values()->all());
         $this->assertSame('2026-06-01 10:00:00', $post->created_at->format('Y-m-d H:i:s'));
         $this->assertEquals($post->created_at, $post->updated_at);
+        $this->assertSame('2026-06-01', $post->published_at->format('Y-m-d'));
         $this->assertNull(Post::findOrFail(11)->category_id);
 
         $work = Work::with(['images', 'tags'])->findOrFail(20);

@@ -151,6 +151,7 @@ class ImportLegacy extends Command
                 'thumbnail_path' => $this->thumbnail($table, $row),
                 'slug' => $row->slug,
                 'status' => $this->status($table, $row),
+                'published_at' => substr($row->created_at, 0, 10),
                 'created_at' => $row->created_at,
                 'updated_at' => $row->created_at,
             ];

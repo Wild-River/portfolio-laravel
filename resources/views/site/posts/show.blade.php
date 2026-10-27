@@ -14,7 +14,7 @@
                 @endif
                 <span class="article-meta__date">
                     <i class="fa-regular fa-clock"></i>
-                    {{ $post->created_at->format('Y.m.d') }}
+                    {{ $post->published_at->format('Y.m.d') }}
                 </span>
             </div>
         </header>

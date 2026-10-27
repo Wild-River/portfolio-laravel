@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\Storage;
 
-#[Fillable(['category_id', 'title', 'body', 'thumbnail_path', 'slug', 'status'])]
+#[Fillable(['category_id', 'title', 'body', 'thumbnail_path', 'slug', 'status', 'published_at'])]
 #[RouteKey('slug')]
 class Post extends Model
 {
@@ -31,6 +31,7 @@ class Post extends Model
     {
         return [
             'status' => PublishStatus::class,
+            'published_at' => 'date',
         ];
     }
 

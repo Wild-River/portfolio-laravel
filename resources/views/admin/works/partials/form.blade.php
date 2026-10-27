@@ -91,3 +91,10 @@
     </select>
     <x-input-error class="mt-2" :messages="$errors->get('status')" />
 </div>
+
+<div>
+    <x-input-label for="published_at" value="公開日" />
+    <x-text-input id="published_at" name="published_at" type="date" class="mt-1 block w-full sm:w-64" :value="old('published_at', $work?->published_at?->format('Y-m-d') ?? today()->format('Y-m-d'))" required />
+    <p class="mt-1 text-sm text-gray-500">公開ページに表示する日付です。並び順にも使います。</p>
+    <x-input-error class="mt-2" :messages="$errors->get('published_at')" />
+</div>

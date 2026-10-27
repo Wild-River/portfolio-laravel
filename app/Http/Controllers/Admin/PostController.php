@@ -20,7 +20,7 @@ class PostController extends Controller
      */
     public function index(): View
     {
-        $posts = Post::with('category')->latest('id')->paginate(20);
+        $posts = Post::with('category')->latest('published_at')->latest('id')->paginate(20);
 
         return view('admin.posts.index', compact('posts'));
     }

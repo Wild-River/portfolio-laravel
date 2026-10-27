@@ -33,6 +33,7 @@ class PostRequest extends FormRequest
                 Rule::unique(Post::class)->ignore($this->route('post')),
             ],
             'status' => ['required', Rule::enum(PublishStatus::class)],
+            'published_at' => ['required', 'date'],
         ];
     }
 

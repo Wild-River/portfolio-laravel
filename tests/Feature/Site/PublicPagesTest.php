@@ -24,9 +24,9 @@ class PublicPagesTest extends TestCase
 
     public function test_home_shows_latest_three_published_posts(): void
     {
-        $old = Post::factory()->published()->create(['title' => '古い記事', 'created_at' => now()->subDays(10)]);
+        $old = Post::factory()->published()->create(['title' => '古い記事', 'published_at' => now()->subDays(10)]);
         $latest = Post::factory()->published()->count(3)->sequence(
-            fn ($sequence) => ['title' => "新しい記事{$sequence->index}", 'created_at' => now()->subDays($sequence->index)],
+            fn ($sequence) => ['title' => "新しい記事{$sequence->index}", 'published_at' => now()->subDays($sequence->index)],
         )->create();
         $draft = Post::factory()->create(['title' => '下書きの記事']);
 
@@ -41,7 +41,7 @@ class PublicPagesTest extends TestCase
 
     public function test_home_shows_latest_six_published_works(): void
     {
-        $old = Work::factory()->published()->create(['title' => '古いアプリ', 'created_at' => now()->subDays(10)]);
+        $old = Work::factory()->published()->create(['title' => '古いアプリ', 'published_at' => now()->subYears(2)]);
         Work::factory()->published()->count(6)->create();
         $draft = Work::factory()->create(['title' => '下書きのアプリ']);
 
@@ -85,6 +85,16 @@ class PublicPagesTest extends TestCase
             ->assertSee('学習ログ')
             ->assertSee('&lt;script&gt;', false)
             ->assertDontSee('<script>alert(1)</script>', false);
+    }
+
+    public function test_post_shows_its_published_date_not_creation_date(): void
+    {
+        Post::factory()->published()->create(['slug' => 'first-post', 'published_at' => '2025-12-24', 'created_at' => '2026-07-20 12:00:00']);
+
+        $this->get('/posts/first-post')
+            ->assertOk()
+            ->assertSee('2025.12.24')
+            ->assertDontSee('2026.07.20');
     }
 
     public function test_draft_or_missing_post_is_not_found(): void

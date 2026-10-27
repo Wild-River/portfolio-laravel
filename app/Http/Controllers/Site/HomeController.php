@@ -16,8 +16,8 @@ class HomeController extends Controller
     public function __invoke(GitHubLanguageService $github): View
     {
         return view('site.home', [
-            'posts' => Post::published()->with('category')->latest()->limit(3)->get(),
-            'works' => Work::published()->with('category')->latest()->limit(6)->get(),
+            'posts' => Post::published()->with('category')->latest('published_at')->latest('id')->limit(3)->get(),
+            'works' => Work::published()->with('category')->latest('published_at')->latest('id')->limit(6)->get(),
             'languages' => $github->topLanguages(),
         ]);
     }

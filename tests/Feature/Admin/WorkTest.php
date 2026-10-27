@@ -36,6 +36,7 @@ class WorkTest extends TestCase
             'description' => '説明文です。',
             'slug' => 'portfolio',
             'status' => 'published',
+            'published_at' => '2026-10-01',
             ...$overrides,
         ];
     }

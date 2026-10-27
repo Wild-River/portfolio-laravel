@@ -21,7 +21,7 @@ class WorkController extends Controller
      */
     public function index(): View
     {
-        $works = Work::with('category')->withCount('images')->latest('id')->paginate(20);
+        $works = Work::with('category')->withCount('images')->latest('published_at')->latest('id')->paginate(20);
 
         return view('admin.works.index', compact('works'));
     }

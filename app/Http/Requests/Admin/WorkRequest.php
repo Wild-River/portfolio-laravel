@@ -37,6 +37,7 @@ class WorkRequest extends FormRequest
                 Rule::unique(Work::class)->ignore($this->route('work')),
             ],
             'status' => ['required', Rule::enum(PublishStatus::class)],
+            'published_at' => ['required', 'date'],
         ];
     }
 

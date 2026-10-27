@@ -36,6 +36,7 @@ class PostTest extends TestCase
             'body' => '本文です。',
             'slug' => 'first-post',
             'status' => 'published',
+            'published_at' => '2026-10-01',
             ...$overrides,
         ];
     }
@@ -140,6 +141,27 @@ class PostTest extends TestCase
             ->post('/admin/posts', $this->validInput(['tags' => [999]]))
             ->assertOk()
             ->assertSee('選択されたタグは正しくありません。');
+    }
+
+    public function test_published_date_is_saved_and_required(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user)
+            ->post('/admin/posts', $this->validInput(['published_at' => '2025-12-24']))
+            ->assertSessionHasNoErrors();
+        $this->assertSame('2025-12-24', Post::firstOrFail()->published_at->format('Y-m-d'));
+
+        $this->actingAs($user)
+            ->post('/admin/posts', $this->validInput(['slug' => 'second', 'published_at' => '']))
+            ->assertSessionHasErrors(['published_at' => '公開日を入力してください。']);
+    }
+
+    public function test_create_form_defaults_to_today(): void
+    {
+        $this->actingAs(User::factory()->create())
+            ->get('/admin/posts/create')
+            ->assertSee('value="'.today()->format('Y-m-d').'"', false);
     }
 
     public function test_slug_must_be_unique(): void

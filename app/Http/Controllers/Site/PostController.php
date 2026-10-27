@@ -14,7 +14,7 @@ class PostController extends Controller
      */
     public function index(): View
     {
-        $posts = Post::published()->with('tags')->latest()->get();
+        $posts = Post::published()->with('tags')->latest('published_at')->latest('id')->get();
 
         return view('site.posts.index', compact('posts'));
     }
