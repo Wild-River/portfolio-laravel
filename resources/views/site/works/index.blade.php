@@ -7,7 +7,7 @@
 
     <div class="portfolio-grid">
         @foreach ($works as $work)
-            @include('site.partials.work-card')
+            @include('site.partials.work-card', ['showDate' => true])
         @endforeach
     </div>
 </x-site-layout>

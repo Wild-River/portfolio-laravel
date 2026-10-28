@@ -519,6 +519,13 @@ body:has(.site-footer) h2.blog-card__title {
   gap: 20px;
 }
 
+/* 制作アプリ一覧：タイトル・日付・タグを縦に並べる */
+.portfolio-card__heading--stacked {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+
 .portfolio-card__title {
   margin: 0;
   font-size: 0.95rem;
@@ -536,6 +543,14 @@ body:has(.site-footer) h2.blog-card__title {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
+}
+
+.portfolio-card__meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
 }
 
 /* 制作アプリの詳細ページ：確認用URL・GitHub へのアイコン付きボタン */
