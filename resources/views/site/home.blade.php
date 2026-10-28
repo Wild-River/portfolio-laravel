@@ -27,17 +27,7 @@
     <h2>制作アプリ</h2>
     <div class="portfolio-grid portfolio-grid--home">
         @foreach ($works as $work)
-            <a class="portfolio-card" href="{{ route('works.show', $work) }}">
-                @if ($work->thumbnail_url)
-                    <span class="thumb-frame">
-                        <img class="portfolio-card__thumb" src="{{ $work->thumbnail_url }}" alt="{{ $work->title }}">
-                    </span>
-                @endif
-                <div class="portfolio-card__body">
-                    <p class="portfolio-card__title">{{ $work->title }}</p>
-                    <p class="portfolio-card__category">{{ $work->category?->name }}</p>
-                </div>
-            </a>
+            @include('site.partials.work-card')
         @endforeach
     </div>
 

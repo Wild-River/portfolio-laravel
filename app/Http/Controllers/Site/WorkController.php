@@ -14,7 +14,7 @@ class WorkController extends Controller
      */
     public function index(): View
     {
-        $works = Work::published()->with(['category', 'tags'])->latest('published_at')->latest('id')->get();
+        $works = Work::published()->with('tags')->latest('published_at')->latest('id')->get();
 
         return view('site.works.index', compact('works'));
     }

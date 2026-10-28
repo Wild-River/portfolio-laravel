@@ -61,6 +61,15 @@ class PublicPagesTest extends TestCase
             ->assertSeeInOrder(['GitHubリポジトリでの使用言語', 'PHP', '75%', 'Blade', '25%']);
     }
 
+    public function test_home_work_cards_show_tags_like_the_works_list(): void
+    {
+        $tag = Tag::factory()->create(['name' => 'Laravel']);
+        Work::factory()->published()->hasAttached($tag)->create();
+
+        $this->get('/')->assertOk()->assertSee('<span class="tag-chip">#Laravel</span>', false);
+        $this->get('/works')->assertOk()->assertSee('<span class="tag-chip">#Laravel</span>', false);
+    }
+
     public function test_posts_index_lists_only_published_posts_with_tags(): void
     {
         $tag = Tag::factory()->create(['name' => 'Laravel']);

@@ -17,7 +17,7 @@ class HomeController extends Controller
     {
         return view('site.home', [
             'posts' => Post::published()->with('category')->latest('published_at')->latest('id')->limit(3)->get(),
-            'works' => Work::published()->with('category')->latest('published_at')->latest('id')->limit(6)->get(),
+            'works' => Work::published()->with('tags')->latest('published_at')->latest('id')->limit(6)->get(),
             'languages' => $github->topLanguages(),
         ]);
     }
