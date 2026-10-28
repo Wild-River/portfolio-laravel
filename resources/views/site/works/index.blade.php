@@ -1,4 +1,4 @@
-<x-site-layout title="制作アプリ一覧">
+<x-site-layout title="制作アプリ一覧" :wide="true">
     <x-slot name="header">
         @include('site.partials.banner', ['title' => 'works'])
     </x-slot>

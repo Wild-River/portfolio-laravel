@@ -1,4 +1,4 @@
-@props(['title' => null])
+@props(['title' => null, 'wide' => false])
 
 <!DOCTYPE html>
 <html lang="ja">
@@ -14,7 +14,7 @@
 <body>
     {{ $header }}
 
-    <div class="container">
+    <div @class(['container', 'container--wide' => $wide])>
         {{ $slot }}
     </div>
 
