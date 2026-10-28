@@ -163,6 +163,36 @@ class PublicPagesTest extends TestCase
             ->assertDontSee('id="lightbox"', false);
     }
 
+    public function test_work_links_are_shown_as_buttons_only_on_the_detail_page(): void
+    {
+        Work::factory()->published()->create([
+            'slug' => 'portfolio',
+            'demo_url' => 'https://example.com/app',
+            'github_url' => 'https://github.com/Wild-River/app',
+        ]);
+
+        $this->get('/works/portfolio')
+            ->assertOk()
+            ->assertSee('href="https://example.com/app"', false)
+            ->assertSee('アプリを見る')
+            ->assertSee('href="https://github.com/Wild-River/app"', false)
+            ->assertSee('コードを見る');
+
+        foreach (['/', '/works'] as $page) {
+            $this->get($page)
+                ->assertOk()
+                ->assertDontSee('href="https://example.com/app"', false)
+                ->assertDontSee('href="https://github.com/Wild-River/app"', false);
+        }
+    }
+
+    public function test_work_without_links_shows_no_link_area(): void
+    {
+        Work::factory()->published()->create(['slug' => 'portfolio', 'demo_url' => null, 'github_url' => null]);
+
+        $this->get('/works/portfolio')->assertOk()->assertDontSee('class="work-links', false);
+    }
+
     public function test_draft_work_is_not_found(): void
     {
         Work::factory()->create(['slug' => 'draft-work']);

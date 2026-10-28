@@ -15,6 +15,20 @@
 </div>
 
 <div>
+    <x-input-label for="demo_url" value="確認用URL" />
+    <x-text-input id="demo_url" name="demo_url" type="url" class="mt-1 block w-full" :value="old('demo_url', $work?->demo_url)" placeholder="https://" required />
+    <p class="mt-1 text-sm text-gray-500">実際にアプリを動かして確認できる URL です（公開ページに「アプリを見る」として表示）。</p>
+    <x-input-error class="mt-2" :messages="$errors->get('demo_url')" />
+</div>
+
+<div>
+    <x-input-label for="github_url" value="GitHub URL（任意）" />
+    <x-text-input id="github_url" name="github_url" type="url" class="mt-1 block w-full" :value="old('github_url', $work?->github_url)" placeholder="https://github.com/" />
+    <p class="mt-1 text-sm text-gray-500">コードのリポジトリの URL です（公開ページに「コードを見る」として表示）。リポジトリが非公開なら空のままにしてください。</p>
+    <x-input-error class="mt-2" :messages="$errors->get('github_url')" />
+</div>
+
+<div>
     <x-input-label for="thumbnail" value="サムネイル画像" />
     @if ($work?->thumbnail_url)
         <img src="{{ $work->thumbnail_url }}" alt="現在のサムネイル" class="mt-2 max-w-sm rounded">

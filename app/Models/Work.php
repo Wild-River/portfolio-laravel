@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Storage;
 
-#[Fillable(['category_id', 'title', 'description', 'thumbnail_path', 'slug', 'status', 'published_at'])]
+#[Fillable(['category_id', 'title', 'description', 'demo_url', 'github_url', 'thumbnail_path', 'slug', 'status', 'published_at'])]
 #[RouteKey('slug')]
 class Work extends Model
 {

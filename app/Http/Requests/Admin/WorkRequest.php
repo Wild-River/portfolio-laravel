@@ -20,6 +20,8 @@ class WorkRequest extends FormRequest
         return [
             'title' => ['required', 'string', 'max:100'],
             'description' => ['required', 'string'],
+            'demo_url' => ['required', 'url:http,https', 'max:255'],
+            'github_url' => ['nullable', 'url:http,https', 'max:255'],
             'thumbnail' => ['nullable', 'image', 'mimes:jpg,png,gif,webp', 'max:2048'],
             'remove_thumbnail' => ['boolean'],
             'images' => ['array', 'max:10'],

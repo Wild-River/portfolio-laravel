@@ -198,6 +198,8 @@ return [
         'title' => 'タイトル',
         'body' => '本文',
         'description' => '説明',
+        'demo_url' => '確認用URL',
+        'github_url' => 'GitHub URL',
         'slug' => 'スラッグ',
         'status' => '公開状態',
         'published_at' => '公開日',

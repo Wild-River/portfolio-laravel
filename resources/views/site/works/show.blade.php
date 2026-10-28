@@ -19,6 +19,8 @@
             </div>
         </header>
 
+        @include('site.partials.work-links')
+
         @if ($work->thumbnail_url)
             <img class="article-hero" src="{{ $work->thumbnail_url }}" alt="{{ $work->title }}">
         @endif

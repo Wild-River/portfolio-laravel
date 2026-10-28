@@ -34,6 +34,8 @@ class WorkTest extends TestCase
         return [
             'title' => 'ポートフォリオサイト',
             'description' => '説明文です。',
+            'demo_url' => 'https://example.com/app',
+            'github_url' => 'https://github.com/Wild-River/app',
             'slug' => 'portfolio',
             'status' => 'published',
             'published_at' => '2026-10-01',
@@ -125,6 +127,28 @@ class WorkTest extends TestCase
 
         $this->assertDatabaseCount('works', 1);
         $this->assertDatabaseCount('work_images', 0);
+    }
+
+    public function test_demo_url_is_required_and_github_url_is_optional(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user)
+            ->post('/admin/works', $this->validInput(['demo_url' => '', 'github_url' => '']))
+            ->assertSessionHasErrors(['demo_url' => '確認用URLを入力してください。'])
+            ->assertSessionDoesntHaveErrors('github_url');
+
+        $this->actingAs($user)
+            ->post('/admin/works', $this->validInput(['demo_url' => 'javascript:alert(1)', 'github_url' => 'not a url']))
+            ->assertSessionHasErrors(['demo_url', 'github_url']);
+
+        $this->actingAs($user)
+            ->post('/admin/works', $this->validInput(['github_url' => '']))
+            ->assertSessionHasNoErrors();
+
+        $work = Work::firstOrFail();
+        $this->assertSame('https://example.com/app', $work->demo_url);
+        $this->assertNull($work->github_url);
     }
 
     public function test_gallery_images_are_validated(): void
