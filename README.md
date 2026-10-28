@@ -1,5 +1,7 @@
 # ポートフォリオ・ブログ管理システム（Laravel 版）
 
+![公開ページのスクリーンショット](docs/screenshot.webp)
+
 ブログ記事（posts）と制作アプリ（works）を管理画面から投稿・編集し、公開ページに表示するポートフォリオサイトです。
 
 最初はフレームワークを使わず、素の PHP（PDO）と MySQL で作りました（[素の PHP 版のリポジトリ](https://github.com/Wild-River/kadai09_auth)）。このリポジトリは、その機能とデータベース設計を引き継いで、Laravel で作り直したものです。
