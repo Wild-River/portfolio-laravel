@@ -54,6 +54,27 @@ class AutoLinkTest extends TestCase
         );
     }
 
+    public function test_site_paths_become_links_in_the_same_tab(): void
+    {
+        $this->assertSame(
+            '後継版はこちら：<a href="/works/coffee-inventory-v2">/works/coffee-inventory-v2</a>。',
+            (string) AutoLink::html('後継版はこちら：/works/coffee-inventory-v2。'),
+        );
+        $this->assertSame(
+            '（<a href="/posts/hello">/posts/hello</a>）',
+            (string) AutoLink::html('（/posts/hello）'),
+        );
+    }
+
+    public function test_site_paths_inside_urls_or_other_paths_are_not_linked_separately(): void
+    {
+        $this->assertSame(
+            $this->link('https://example.com/works/foo'),
+            (string) AutoLink::html('https://example.com/works/foo'),
+        );
+        $this->assertSame('admin/works/foo /admin/works/foo', (string) AutoLink::html('admin/works/foo /admin/works/foo'));
+    }
+
     public function test_multiple_urls_on_separate_lines(): void
     {
         $this->assertSame(
