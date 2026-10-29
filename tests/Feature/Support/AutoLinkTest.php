@@ -3,6 +3,7 @@
 namespace Tests\Feature\Support;
 
 use App\Support\AutoLink;
+use Illuminate\Support\Facades\URL;
 use Tests\TestCase;
 
 class AutoLinkTest extends TestCase
@@ -57,12 +58,22 @@ class AutoLinkTest extends TestCase
     public function test_site_paths_become_links_in_the_same_tab(): void
     {
         $this->assertSame(
-            '後継版はこちら：<a href="/works/coffee-inventory-v2">/works/coffee-inventory-v2</a>。',
+            '後継版はこちら：<a href="'.url('/works/coffee-inventory-v2').'">/works/coffee-inventory-v2</a>。',
             (string) AutoLink::html('後継版はこちら：/works/coffee-inventory-v2。'),
         );
         $this->assertSame(
-            '（<a href="/posts/hello">/posts/hello</a>）',
+            '（<a href="'.url('/posts/hello').'">/posts/hello</a>）',
             (string) AutoLink::html('（/posts/hello）'),
+        );
+    }
+
+    public function test_site_paths_link_under_the_subfolder_the_site_lives_in(): void
+    {
+        URL::useOrigin('http://example.com/portfolio');
+
+        $this->assertSame(
+            '<a href="http://example.com/portfolio/works/foo">/works/foo</a>',
+            (string) AutoLink::html('/works/foo'),
         );
     }
 

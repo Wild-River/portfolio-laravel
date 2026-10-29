@@ -44,7 +44,7 @@ class ArticleBodyTest extends TestCase
         $html = (string) ArticleBody::html("【<b>見出し</b>】\n・<script>x</script> /works/photo-map\n参考：https://example.com/");
 
         $this->assertStringContainsString('<h2 class="article-body__heading">&lt;b&gt;見出し&lt;/b&gt;</h2>', $html);
-        $this->assertStringContainsString('<li>&lt;script&gt;x&lt;/script&gt; <a href="/works/photo-map">/works/photo-map</a></li>', $html);
+        $this->assertStringContainsString('<li>&lt;script&gt;x&lt;/script&gt; <a href="'.url('/works/photo-map').'">/works/photo-map</a></li>', $html);
         $this->assertStringContainsString('<a href="https://example.com/" target="_blank" rel="noopener noreferrer">', $html);
     }
 }

@@ -37,8 +37,9 @@ class AutoLink
             }
 
             // Site paths open in the same tab; external URLs open in a new one.
+            // url() keeps the link working when the site lives in a subfolder (/portfolio/works/...).
             if (str_starts_with($part, '/')) {
-                $html .= '<a href="'.e($part).'">'.e($part).'</a>';
+                $html .= '<a href="'.e(url($part)).'">'.e($part).'</a>';
 
                 continue;
             }
