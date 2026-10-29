@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\TagController;
+use App\Http\Controllers\Admin\TechnologyController;
 use App\Http\Controllers\Admin\WorkController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Site;
@@ -29,6 +30,7 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::resource('posts', PostController::class)->except('show');
     Route::resource('categories', CategoryController::class)->except('show');
     Route::resource('tags', TagController::class)->except('show');
+    Route::resource('technologies', TechnologyController::class)->except('show');
 });
 
 require __DIR__.'/auth.php';

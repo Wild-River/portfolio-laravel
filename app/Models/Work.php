@@ -88,6 +88,16 @@ class Work extends Model
     }
 
     /**
+     * Get the technologies used in the work, in display order.
+     *
+     * @return BelongsToMany<Technology, $this>
+     */
+    public function technologies(): BelongsToMany
+    {
+        return $this->belongsToMany(Technology::class)->ordered();
+    }
+
+    /**
      * Get the gallery images in display order.
      *
      * @return HasMany<WorkImage, $this>

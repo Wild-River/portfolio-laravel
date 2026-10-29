@@ -4,6 +4,7 @@ namespace Tests\Feature\Admin;
 
 use App\Models\Category;
 use App\Models\Tag;
+use App\Models\Technology;
 use App\Models\User;
 use App\Models\Work;
 use App\Models\WorkImage;
@@ -94,6 +95,7 @@ class WorkTest extends TestCase
         $user = User::factory()->create();
         $category = Category::factory()->create();
         $tag = Tag::factory()->create();
+        $technology = Technology::factory()->create();
 
         $this->actingAs($user)
             ->post('/admin/works', $this->validInput([
@@ -104,6 +106,7 @@ class WorkTest extends TestCase
                 ],
                 'category_id' => $category->id,
                 'tags' => [$tag->id],
+                'technologies' => [$technology->id],
             ]))
             ->assertSessionHasNoErrors()
             ->assertRedirect('/admin/works');
@@ -111,6 +114,7 @@ class WorkTest extends TestCase
         $work = Work::with('images')->firstOrFail();
         $this->assertSame($user->id, $work->user_id);
         $this->assertSame([$tag->id], $work->tags->pluck('id')->all());
+        $this->assertSame([$technology->id], $work->technologies->pluck('id')->all());
         $this->assertSame([0, 1], $work->images->pluck('sort_order')->all());
         Storage::disk('public')->assertExists($work->thumbnail_path);
         foreach ($work->images as $image) {

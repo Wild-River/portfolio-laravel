@@ -31,6 +31,8 @@ class WorkRequest extends FormRequest
             'category_id' => ['nullable', 'integer', Rule::exists('categories', 'id')],
             'tags' => ['array'],
             'tags.*' => ['integer', Rule::exists('tags', 'id')],
+            'technologies' => ['array'],
+            'technologies.*' => ['integer', Rule::exists('technologies', 'id')],
             'slug' => [
                 'required',
                 'string',
@@ -52,6 +54,7 @@ class WorkRequest extends FormRequest
     {
         return [
             'tags.*' => 'タグ',
+            'technologies.*' => '使用技術',
             'images.*' => 'ギャラリー画像',
         ];
     }

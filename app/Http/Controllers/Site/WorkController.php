@@ -26,6 +26,6 @@ class WorkController extends Controller
     {
         abort_unless($work->status === PublishStatus::Published, 404);
 
-        return view('site.works.show', ['work' => $work->load(['category', 'tags', 'images'])]);
+        return view('site.works.show', ['work' => $work->load(['category', 'tags', 'technologies', 'images'])]);
     }
 }

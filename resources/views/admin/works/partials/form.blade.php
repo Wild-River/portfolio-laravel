@@ -1,5 +1,6 @@
 @php
     $selectedTagIds = array_map('intval', old('tags', $work?->tags->pluck('id')->all() ?? []));
+    $selectedTechnologyIds = array_map('intval', old('technologies', $work?->technologies->pluck('id')->all() ?? []));
 @endphp
 
 <div>
@@ -87,6 +88,24 @@
         @endforelse
     </div>
     <x-input-error class="mt-2" :messages="Arr::flatten([$errors->get('tags'), $errors->get('tags.*')])" />
+</fieldset>
+
+<fieldset>
+    <legend class="block font-medium text-sm text-gray-700">使用技術</legend>
+    @forelse ($technologies as $label => $group)
+        <p class="mt-3 text-xs font-semibold text-gray-500">{{ $label }}</p>
+        <div class="mt-1 flex flex-wrap gap-x-6 gap-y-2">
+            @foreach ($group as $technology)
+                <label class="inline-flex items-center gap-2 text-sm text-gray-700">
+                    <input type="checkbox" name="technologies[]" value="{{ $technology->id }}" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" @checked(in_array($technology->id, $selectedTechnologyIds, true))>
+                    {{ $technology->name }}
+                </label>
+            @endforeach
+        </div>
+    @empty
+        <p class="mt-2 text-sm text-gray-500">使用技術はまだありません。<a href="{{ route('admin.technologies.create') }}" class="text-indigo-600 hover:underline">使用技術を登録</a>してください。</p>
+    @endforelse
+    <x-input-error class="mt-2" :messages="Arr::flatten([$errors->get('technologies'), $errors->get('technologies.*')])" />
 </fieldset>
 
 <div>

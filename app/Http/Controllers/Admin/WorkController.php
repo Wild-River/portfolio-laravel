@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\WorkRequest;
 use App\Models\Category;
 use App\Models\Tag;
+use App\Models\Technology;
 use App\Models\Work;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\UploadedFile;
@@ -39,13 +40,14 @@ class WorkController extends Controller
      */
     public function store(WorkRequest $request): RedirectResponse
     {
-        $attributes = $request->safe()->except(['thumbnail', 'remove_thumbnail', 'images', 'delete_images', 'tags']);
+        $attributes = $request->safe()->except(['thumbnail', 'remove_thumbnail', 'images', 'delete_images', 'tags', 'technologies']);
         $attributes['thumbnail_path'] = $request->file('thumbnail')?->store('works', 'public');
         $newImages = $this->storeImages($request->file('images', []), 0);
 
         DB::transaction(function () use ($request, $attributes, $newImages) {
             $work = $request->user()->works()->create($attributes);
             $work->tags()->sync($request->validated('tags', []));
+            $work->technologies()->sync($request->validated('technologies', []));
             $work->images()->createMany($newImages);
         });
 
@@ -57,7 +59,7 @@ class WorkController extends Controller
      */
     public function edit(Work $work): View
     {
-        return view('admin.works.edit', ['work' => $work->load(['tags', 'images']), ...$this->formOptions()]);
+        return view('admin.works.edit', ['work' => $work->load(['tags', 'technologies', 'images']), ...$this->formOptions()]);
     }
 
     /**
@@ -65,7 +67,7 @@ class WorkController extends Controller
      */
     public function update(WorkRequest $request, Work $work): RedirectResponse
     {
-        $attributes = $request->safe()->except(['thumbnail', 'remove_thumbnail', 'images', 'delete_images', 'tags']);
+        $attributes = $request->safe()->except(['thumbnail', 'remove_thumbnail', 'images', 'delete_images', 'tags', 'technologies']);
         $oldThumbnailPath = $work->thumbnail_path;
 
         if ($request->hasFile('thumbnail')) {
@@ -81,6 +83,7 @@ class WorkController extends Controller
         DB::transaction(function () use ($request, $work, $attributes, $deletedImages, $newImages) {
             $work->update($attributes);
             $work->tags()->sync($request->validated('tags', []));
+            $work->technologies()->sync($request->validated('technologies', []));
             $work->images()->whereKey($deletedImages->modelKeys())->delete();
             $work->images()->createMany($newImages);
         });
@@ -134,6 +137,7 @@ class WorkController extends Controller
         return [
             'categories' => Category::orderBy('id')->get(),
             'tags' => Tag::orderBy('id')->get(),
+            'technologies' => Technology::ordered()->get()->groupBy(fn (Technology $technology) => $technology->category->label()),
             'statuses' => PublishStatus::cases(),
         ];
     }

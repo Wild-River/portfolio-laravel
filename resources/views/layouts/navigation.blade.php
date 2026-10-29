@@ -27,6 +27,9 @@
                     <x-nav-link :href="route('admin.tags.index')" :active="request()->routeIs('admin.tags.*')">
                         タグ
                     </x-nav-link>
+                    <x-nav-link :href="route('admin.technologies.index')" :active="request()->routeIs('admin.technologies.*')">
+                        使用技術
+                    </x-nav-link>
                 </div>
             </div>
 
@@ -93,6 +96,9 @@
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('admin.tags.index')" :active="request()->routeIs('admin.tags.*')">
                 タグ
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('admin.technologies.index')" :active="request()->routeIs('admin.technologies.*')">
+                使用技術
             </x-responsive-nav-link>
         </div>
 

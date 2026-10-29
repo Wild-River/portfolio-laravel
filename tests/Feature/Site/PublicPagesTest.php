@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\GitHubLanguageStat;
 use App\Models\Post;
 use App\Models\Tag;
+use App\Models\Technology;
 use App\Models\Work;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
@@ -191,6 +192,32 @@ class PublicPagesTest extends TestCase
         Work::factory()->published()->create(['slug' => 'portfolio', 'demo_url' => null, 'github_url' => null]);
 
         $this->get('/works/portfolio')->assertOk()->assertDontSee('class="work-links', false);
+    }
+
+    public function test_work_shows_technologies_grouped_by_category(): void
+    {
+        $work = Work::factory()->published()->create(['slug' => 'portfolio']);
+        $work->technologies()->attach([
+            Technology::factory()->create(['name' => 'Vercel', 'category' => 'tool', 'icon' => 'vercel'])->id,
+            Technology::factory()->create(['name' => 'React', 'category' => 'frontend', 'icon' => 'react', 'color' => '#61DAFB'])->id,
+            Technology::factory()->create(['name' => 'さくらのレンタルサーバー', 'category' => 'tool', 'icon' => 'sakura-internet.svg'])->id,
+            Technology::factory()->create(['name' => 'Groq', 'category' => 'service'])->id,
+        ]);
+
+        $this->get('/works/portfolio')
+            ->assertOk()
+            ->assertSeeInOrder(['使用技術', 'Frontend', 'React', 'External services', 'Groq', 'Hosting / Tools', 'Vercel', 'さくらのレンタルサーバー'])
+            ->assertSee('simple-icons@16.34.0/icons/react.svg', false)
+            ->assertSee('--icon-color: #61DAFB', false)
+            ->assertSee('<img class="tech-tile__image" src="'.asset('images/technologies/sakura-internet.svg').'"', false)
+            ->assertSee('<span class="tech-tile__initial">G</span>', false);
+    }
+
+    public function test_work_without_technologies_has_no_technology_section(): void
+    {
+        Work::factory()->published()->create(['slug' => 'portfolio']);
+
+        $this->get('/works/portfolio')->assertOk()->assertDontSee('class="article-tech"', false);
     }
 
     public function test_draft_work_is_not_found(): void
