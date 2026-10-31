@@ -8,7 +8,7 @@ on:
 # 同じブランチで新しい push があったら、古い実行は止める
 concurrency:
   group: ci-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   test:
@@ -87,3 +87,40 @@ jobs:
 
       - name: テストを実行
         run: php artisan test
+
+  deploy:
+    # テストが通って、main に push されたときだけデプロイする
+    needs: test
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Node.js をセットアップ
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: フロントエンドをビルド
+        run: |
+          npm ci
+          npm run build
+
+      - name: SSH を準備
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          echo "${{ secrets.SSH_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+
+      - name: メンテナンスモードにする
+        run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ~/portfolio-laravel && php artisan down"
+
+      - name: ビルドしたファイルを送る
+        run: rsync -az public/build/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:portfolio-laravel/public/build/
+
+      - name: サーバを更新
+        run: |
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ~/portfolio-laravel && git pull && php composer.phar install --no-dev --optimize-autoloader --no-interaction && php artisan migrate --force && php artisan config:cache && php artisan route:cache && php artisan view:cache && php artisan up"
