@@ -229,4 +229,40 @@ class PublicPagesTest extends TestCase
 
         $this->get('/works/draft-work')->assertNotFound();
     }
+
+    public function test_home_has_default_ogp_tags(): void
+    {
+        $this->get('/')
+            ->assertOk()
+            ->assertSee('<meta property="og:type" content="website">', false)
+            ->assertSee('<meta property="og:image" content="'.url('/images/ogp.jpg').'">', false)
+            ->assertSee('<meta name="twitter:card" content="summary_large_image">', false);
+    }
+
+    public function test_work_ogp_uses_its_title_description_and_thumbnail(): void
+    {
+        Work::factory()->published()->create([
+            'slug' => 'portfolio',
+            'title' => 'ポートフォリオサイト',
+            'description' => "Laravel で作り直した\nポートフォリオです。",
+            'thumbnail_path' => 'works/thumb.png',
+        ]);
+
+        $this->get('/works/portfolio')
+            ->assertOk()
+            ->assertSee('<meta property="og:title" content="ポートフォリオサイト">', false)
+            ->assertSee('<meta property="og:description" content="Laravel で作り直した ポートフォリオです。">', false)
+            ->assertSee('<meta property="og:type" content="article">', false)
+            ->assertSee('<meta property="og:url" content="'.url('/works/portfolio').'">', false)
+            ->assertSee('works/thumb.png">', false);
+    }
+
+    public function test_post_without_thumbnail_uses_default_ogp_image(): void
+    {
+        Post::factory()->published()->create(['slug' => 'hello', 'thumbnail_path' => null]);
+
+        $this->get('/posts/hello')
+            ->assertOk()
+            ->assertSee('<meta property="og:image" content="'.url('/images/ogp.jpg').'">', false);
+    }
 }

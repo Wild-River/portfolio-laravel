@@ -1,4 +1,4 @@
-<x-site-layout :title="$post->title">
+<x-site-layout :title="$post->title" :description="$post->body" :image="$post->thumbnail_url" type="article">
     <x-slot name="header">
         @include('site.partials.banner', ['title' => 'blog', 'tag' => 'p'])
     </x-slot>
