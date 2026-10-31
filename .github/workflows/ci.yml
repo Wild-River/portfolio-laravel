@@ -1,0 +1,89 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# 同じブランチで新しい push があったら、古い実行は止める
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      # 本番（さくら）に合わせて 8.0
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: testing
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -ppassword"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    # .env と phpunit.xml より優先される
+    env:
+      DB_CONNECTION: mysql
+      DB_HOST: 127.0.0.1
+      DB_PORT: 3306
+      DB_DATABASE: testing
+      DB_USERNAME: root
+      DB_PASSWORD: password
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: PHP をセットアップ
+        uses: shivammathur/setup-php@v2
+        with:
+          # 本番（さくら）は 8.3.36。パッチ番号までは固定できないので 8.3 の最新を使う
+          # パッケージは composer.json の platform（8.3.36）に合わせて選ばれる
+          php-version: '8.3'
+          extensions: mbstring, pdo_mysql, pdo_sqlite, gd
+          coverage: none
+
+      - name: Node.js をセットアップ
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Composer のキャッシュ先を取得
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
+
+      - name: Composer のパッケージをキャッシュ
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: composer-${{ hashFiles('composer.lock') }}
+          restore-keys: composer-
+
+      - name: PHP のパッケージをインストール
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: JS のパッケージをインストール
+        run: npm ci
+
+      # 画面を表示するテストは @vite の manifest.json が必要なので、テストより前にビルドする
+      - name: フロントエンドをビルド
+        run: npm run build
+
+      - name: .env を用意
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+
+      - name: コードの書き方をチェック（Pint）
+        run: vendor/bin/pint --test
+
+      - name: テストを実行
+        run: php artisan test
