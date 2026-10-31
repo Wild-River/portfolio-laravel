@@ -1,51 +1,41 @@
-<x-app-layout>
-    <x-slot name="header">
-        <div class="flex items-center justify-between">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                タグ一覧
-            </h2>
-            <a href="{{ route('admin.tags.create') }}" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white tracking-widest hover:bg-gray-700">
-                + 新規登録
-            </a>
-        </div>
-    </x-slot>
-
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            <x-auth-session-status :status="session('status')" />
-
-            <div class="bg-white overflow-x-auto shadow-sm sm:rounded-lg">
-                <table class="min-w-full divide-y divide-gray-200 text-sm">
-                    <thead class="bg-gray-50 text-left text-gray-600">
-                        <tr>
-                            <th class="px-6 py-3">ID</th>
-                            <th class="px-6 py-3">タグ名</th>
-                            <th class="px-6 py-3">スラッグ</th>
-                            <th class="px-6 py-3">記事数</th>
-                            <th class="px-6 py-3">制作アプリ数</th>
-                            <th class="px-6 py-3"></th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-100 text-gray-900">
-                        @forelse ($tags as $tag)
-                            <tr>
-                                <td class="px-6 py-3">{{ $tag->id }}</td>
-                                <td class="px-6 py-3">{{ $tag->name }}</td>
-                                <td class="px-6 py-3">{{ $tag->slug }}</td>
-                                <td class="px-6 py-3">{{ $tag->posts_count }}</td>
-                                <td class="px-6 py-3">{{ $tag->works_count }}</td>
-                                <td class="px-6 py-3 text-right">
-                                    <a href="{{ route('admin.tags.edit', $tag) }}" class="text-indigo-600 hover:underline">編集</a>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="6" class="px-6 py-6 text-center text-gray-500">タグはまだありません。</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-        </div>
+<x-admin-layout title="タグ一覧">
+    <div class="page-head">
+        <h1>タグ一覧</h1>
+        <a href="{{ route('admin.tags.create') }}" class="btn-primary">+ 新規登録</a>
     </div>
-</x-app-layout>
+
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>タグ名</th>
+                    <th>スラッグ</th>
+                    <th>記事数</th>
+                    <th>制作アプリ数</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse ($tags as $tag)
+                    <tr class="row-link" data-href="{{ route('admin.tags.edit', $tag) }}">
+                        <td>{{ $tag->id }}</td>
+                        <td>{{ $tag->name }}</td>
+                        <td>{{ $tag->slug }}</td>
+                        <td>{{ $tag->posts_count }}</td>
+                        <td>{{ $tag->works_count }}</td>
+                        <td class="actions-cell">
+                            <a href="{{ route('admin.tags.edit', $tag) }}" class="icon-btn" title="編集" aria-label="「{{ $tag->name }}」を編集">
+                                <i class="fa-solid fa-pen" aria-hidden="true"></i>
+                            </a>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="6" class="table-empty">タグはまだありません。</td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+</x-admin-layout>

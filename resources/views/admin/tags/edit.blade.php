@@ -1,32 +1,24 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            タグ編集
-        </h2>
-    </x-slot>
+<x-admin-layout title="タグ編集">
+    <h1 class="page-title">タグ編集</h1>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg space-y-6">
-                <form method="post" action="{{ route('admin.tags.update', $tag) }}" class="max-w-xl space-y-6">
-                    @csrf
-                    @method('put')
+    <div class="card">
+        <form method="post" action="{{ route('admin.tags.update', $tag) }}" id="edit-form">
+            @csrf
+            @method('put')
 
-                    @include('admin.tags.partials.form')
+            @include('admin.tags.partials.form')
+        </form>
 
-                    <div class="flex items-center gap-4">
-                        <x-primary-button>更新する</x-primary-button>
-                        <a href="{{ route('admin.tags.index') }}" class="text-sm text-gray-600 hover:underline">戻る</a>
-                    </div>
-                </form>
+        {{-- フォームは入れ子にできないので、更新ボタンは form 属性で上のフォームに結びつける --}}
+        <div class="form-actions">
+            <button type="submit" form="edit-form" class="submit-btn">更新する</button>
+            <form method="post" action="{{ route('admin.tags.destroy', $tag) }}" onsubmit="return confirm('このタグを削除しますか？\n記事と制作アプリからも外れます。');">
+                @csrf
+                @method('delete')
 
-                <form method="post" action="{{ route('admin.tags.destroy', $tag) }}" onsubmit="return confirm('このタグを削除しますか？\n記事と制作アプリからも外れます。');">
-                    @csrf
-                    @method('delete')
-
-                    <x-danger-button>削除する</x-danger-button>
-                </form>
-            </div>
+                <button type="submit" class="delete-btn">削除する</button>
+            </form>
+            <a href="{{ route('admin.tags.index') }}" class="back-btn">戻る</a>
         </div>
     </div>
-</x-app-layout>
+</x-admin-layout>

@@ -34,7 +34,7 @@
 |---|---|
 | バックエンド | PHP 8.5 / Laravel 13 |
 | 認証 | Laravel Breeze（Blade） |
-| フロントエンド | Blade、Tailwind CSS（管理画面）、自作の CSS・JavaScript（公開ページ）、Vite |
+| フロントエンド | Blade、自作の CSS・JavaScript（公開ページ・管理画面）、Vite |
 | データベース | MySQL 8.4 |
 | 外部 API | GitHub REST API |
 | 開発環境 | Docker（Laravel Sail） |
