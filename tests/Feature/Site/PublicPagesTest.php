@@ -172,12 +172,15 @@ class PublicPagesTest extends TestCase
             'github_url' => 'https://github.com/Wild-River/app',
         ]);
 
-        $this->get('/works/portfolio')
+        $response = $this->get('/works/portfolio')
             ->assertOk()
             ->assertSee('href="https://example.com/app"', false)
             ->assertSee('アプリを見る')
             ->assertSee('href="https://github.com/Wild-River/app"', false)
             ->assertSee('コードを見る');
+
+        // 本文の上と下の2か所に表示される
+        $this->assertSame(2, substr_count($response->getContent(), 'class="work-links"'));
 
         foreach (['/', '/works'] as $page) {
             $this->get($page)

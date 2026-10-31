@@ -82,6 +82,9 @@
             </div>
         @endif
 
+        {{-- 読み終えたところからも開けるよう、下部にも同じボタンを置く --}}
+        @include('site.partials.work-links')
+
         <div>
             <a href="{{ route('works.index') }}" class="article-back-link"><i class="fa-solid fa-arrow-left"></i> 戻る</a>
         </div>
