@@ -39,19 +39,19 @@ jobs:
       DB_PASSWORD: password
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: PHP をセットアップ
         uses: shivammathur/setup-php@v2
         with:
           # 本番（さくら）は 8.3.36。パッチ番号までは固定できないので 8.3 の最新を使う
           # パッケージは composer.json の platform（8.3.36）に合わせて選ばれる
-          php-version: '8.3'
+          php-version: "8.3"
           extensions: mbstring, pdo_mysql, pdo_sqlite, gd
           coverage: none
 
       - name: Node.js をセットアップ
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: npm
@@ -61,7 +61,7 @@ jobs:
         run: echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
 
       - name: Composer のパッケージをキャッシュ
-        uses: actions/cache@v4
+        uses: actions/cache@v7
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: composer-${{ hashFiles('composer.lock') }}
